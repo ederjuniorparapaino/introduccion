@@ -73,10 +73,13 @@ void imprimir(persona p[], int cant) {
 void ranking(persona p[], int cant) {
 	for (int i = 0; i < cant; ++i) {
 		cout << "Nombre: " << p[i].nombre << endl;
-		cout << "Juegos y su ranking: " << endl;
-		for (int j = 0; j < TAMJ; ++j) {
-			cout << p[i].juegos[j].nombre << ": " << p[i].juegos[j].ranking << endl;
+		vjuego juegoMasJugado = p[i].juegos[0];
+		for (int j = 1; j < TAMJ; ++j) {
+			if (p[i].juegos[j].ranking > juegoMasJugado.ranking) {
+				juegoMasJugado = p[i].juegos[j];
+			}
 		}
+		cout << "Juego más jugado: " << juegoMasJugado.nombre << " (Ranking: " << juegoMasJugado.ranking << ")" << endl;
 		cout << endl;
 	}
 }
