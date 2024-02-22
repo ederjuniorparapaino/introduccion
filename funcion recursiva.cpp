@@ -16,7 +16,17 @@ void imprec(int *n, int cant)
 	}
 }
 // FUNCION BUSQUEDA
-
+void busquedaRecursiva(int *n, int cant, int elemento, bool &encontrado, int indice = 0)
+{
+	if(indice >= cant)
+		return;
+	if(n[indice] == elemento)
+	{
+		encontrado = true;
+		return;
+	}
+	busquedaRecursiva(n, cant, elemento, encontrado, indice + 1);
+}
 
 // FUNCION MAYOR
 void mayor(int *n, int cant, int &m)
@@ -39,6 +49,14 @@ int main(int argc, char *argv[]) {
 	imprec(numeros,TAM);
 	mayor(numeros,TAM,m);
 	cout<<"MAYOR ES:"<<m<<endl;
+	int elementoBuscado = 7;
+	bool encontrado = false;
+	busquedaRecursiva(numeros, TAM, elementoBuscado, encontrado);
+	if(encontrado)
+		cout << "El elemento " << elementoBuscado << " está presente en el arreglo." << endl;
+	else
+		cout << "El elemento " << elementoBuscado << " no está presente en el arreglo." << endl;
+	
 	
 	
 	return 0;
