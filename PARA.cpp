@@ -40,48 +40,36 @@ string generarDatoAleatorio(string lista[], int longitud) {
 	return lista[rand() % longitud];
 }
 
-// Función para llenar una estructura Libro de forma recursiva
-void llenarLibro(Libro& libro, string listaTitulos[], string listaAutores[], string listaISBN[], string listaGeneros[], string listaEditoriales[], int indice = 0) {
-	if (indice == 0) {
-		libro.titulo = generarDatoAleatorio(listaTitulos, 3);
-		libro.autor = generarDatoAleatorio(listaAutores, 3);
-		libro.ISBN = generarDatoAleatorio(listaISBN, 5);
-		libro.anioPublicacion = rand() % 50 + 1970;
-		libro.genero = generarDatoAleatorio(listaGeneros, 3);
-		libro.estado = "disponible";
-		libro.editorial = generarDatoAleatorio(listaEditoriales, 3);
-		libro.idioma = "Español";
-		libro.ubicacion = "Estantería " + to_string(rand() % 10 + 1);
-		libro.formato = "Impreso";
-	} else if (indice < 10) {
-		llenarLibro(libro, listaTitulos, listaAutores, listaISBN, listaGeneros, listaEditoriales, indice - 1);
-	}
+// Función para llenar una estructura Libro
+void llenarLibro(Libro& libro, string listaTitulos[], string listaAutores[], string listaISBN[], string listaGeneros[], string listaEditoriales[]) {
+	libro.titulo = generarDatoAleatorio(listaTitulos, 4); // Se ha aumentado el tamaño del arreglo de títulos
+	libro.autor = generarDatoAleatorio(listaAutores, 3);
+	libro.ISBN = generarDatoAleatorio(listaISBN, 5);
+	libro.anioPublicacion = rand() % 50 + 1970;
+	libro.genero = generarDatoAleatorio(listaGeneros, 3);
+	libro.estado = "disponible";
+	libro.editorial = generarDatoAleatorio(listaEditoriales, 3);
+	libro.idioma = "Español";
+	libro.ubicacion = "Estantería " + to_string(rand() % 10 + 1);
+	libro.formato = "Impreso";
 }
 
-// Función para llenar una estructura Usuario de forma recursiva
-void llenarUsuario(Usuario& usuario, string listaNombres[], string listaApellidos[], int indice = 0) {
-	if (indice == 0) {
-		usuario.userID = rand() % 5 + 1;
-		usuario.nombre = generarDatoAleatorio(listaNombres, 3);
-		usuario.apellido = generarDatoAleatorio(listaApellidos, 3);
-		usuario.email = usuario.nombre + usuario.apellido + "@gmail.com";
-		usuario.direccion = "Calle " + usuario.nombre + " " + usuario.apellido + ", Ciudad";
-	} else if (indice < 5) {
-		llenarUsuario(usuario, listaNombres, listaApellidos, indice - 1);
-	}
+// Función para llenar una estructura Usuario
+void llenarUsuario(Usuario& usuario, string listaNombres[], string listaApellidos[]) {
+	usuario.userID = rand() % 5 + 1;
+	usuario.nombre = generarDatoAleatorio(listaNombres, 3);
+	usuario.apellido = generarDatoAleatorio(listaApellidos, 3);
+	usuario.email = usuario.nombre + usuario.apellido + "@gmail.com";
+	usuario.direccion = "Calle " + usuario.nombre + " " + usuario.apellido + ", Ciudad";
 }
 
-// Función para llenar una estructura Bibliotecario de forma recursiva
-void llenarBibliotecario(Bibliotecario& bibliotecario, string listaNombres[], string listaApellidos[], int indice = 0) {
-	if (indice == 0) {
-		bibliotecario.empleadoID = rand() % 5 + 1;
-		bibliotecario.nombre = generarDatoAleatorio(listaNombres, 3);
-		bibliotecario.apellido = generarDatoAleatorio(listaApellidos, 3);
-		bibliotecario.email = bibliotecario.nombre + bibliotecario.apellido + "@library.com";
-		bibliotecario.telefono = "123-456-789";
-	} else if (indice < 5) {
-		llenarBibliotecario(bibliotecario, listaNombres, listaApellidos, indice - 1);
-	}
+// Función para llenar una estructura Bibliotecario
+void llenarBibliotecario(Bibliotecario& bibliotecario, string listaNombres[], string listaApellidos[]) {
+	bibliotecario.empleadoID = rand() % 5 + 1;
+	bibliotecario.nombre = generarDatoAleatorio(listaNombres, 3);
+	bibliotecario.apellido = generarDatoAleatorio(listaApellidos, 3);
+	bibliotecario.email = bibliotecario.nombre + bibliotecario.apellido + "@library.com";
+	bibliotecario.telefono = "123-456-789";
 }
 
 // Función para imprimir una estructura Libro
@@ -104,48 +92,40 @@ void imprimir(const Bibliotecario& bibliotecario) {
 		<< ", Email: " << bibliotecario.email << ", Teléfono: " << bibliotecario.telefono << endl;
 }
 
-
-// Función para buscar un libro por título de forma recursiva
-void buscarLibro(const Libro libros[], int longitud, const string& titulo, int indice = 0) {
-	if (indice < longitud) {
-		if (libros[indice].titulo == titulo) {
-			cout << "Libro encontrado:" << endl;
-			imprimir(libros[indice]);
-			return;
-		}
-		buscarLibro(libros, longitud, titulo, indice + 1);
-	} else {
-		cout << "Libro no encontrado." << endl;
+// Función recursiva para buscar libros por nombre e imprimir la cantidad de libros con el mismo nombre
+void buscarPorNombre(const Libro libros[], int cantidadLibros, const string& nombre, int indiceActual = 0, int cantidadEncontrados = 0) {
+	// Caso base: si el índice actual es igual o mayor que la cantidad de libros, se imprime la cantidad de libros encontrados
+	if (indiceActual >= cantidadLibros) {
+		cout << "Cantidad de libros encontrados con el título '" << nombre << "': " << cantidadEncontrados << endl;
+		return;
 	}
+	
+	// Si el nombre del libro en el índice actual coincide con el nombre buscado, se incrementa el contador de libros encontrados
+	if (libros[indiceActual].titulo == nombre) {
+		cantidadEncontrados++;
+	}
+	
+	// Llamada recursiva para buscar en el siguiente libro (incrementando el índice actual)
+	buscarPorNombre(libros, cantidadLibros, nombre, indiceActual + 1, cantidadEncontrados);
 }
 
-// Función para buscar un usuario por nombre y apellido de forma recursiva
-void buscarUsuario(const Usuario usuarios[], int longitud, const string& nombre, const string& apellido, int indice = 0) {
-	if (indice < longitud) {
-		if (usuarios[indice].nombre == nombre && usuarios[indice].apellido == apellido) {
-			cout << "Usuario encontrado:" << endl;
-			imprimir(usuarios[indice]);
-			return;
-		}
-		buscarUsuario(usuarios, longitud, nombre, apellido, indice + 1);
-	} else {
-		cout << "Usuario no encontrado." << endl;
+// Función recursiva para buscar usuarios por nombre y apellido e imprimir la cantidad de usuarios con el mismo nombre o apellido
+void buscarPorNombreApellido(const Usuario usuarios[], int cantidadUsuarios, const string& nombre, const string& apellido, int indiceActual = 0, int cantidadEncontrados = 0) {
+	// Caso base: si el índice actual es igual o mayor que la cantidad de usuarios, se imprime la cantidad de usuarios encontrados
+	if (indiceActual >= cantidadUsuarios) {
+		cout << "Cantidad de usuarios encontrados con el nombre '" << nombre << "' o el apellido '" << apellido << "': " << cantidadEncontrados << endl;
+		return;
 	}
+	
+	// Si el nombre o el apellido del usuario en el índice actual coincide con el nombre o apellido buscado, se incrementa el contador de usuarios encontrados
+	if (usuarios[indiceActual].nombre == nombre || usuarios[indiceActual].apellido == apellido) {
+		cantidadEncontrados++;
+	}
+	
+	// Llamada recursiva para buscar en el siguiente usuario (incrementando el índice actual)
+	buscarPorNombreApellido(usuarios, cantidadUsuarios, nombre, apellido, indiceActual + 1, cantidadEncontrados);
 }
 
-// Función para buscar un bibliotecario por nombre y apellido de forma recursiva
-void buscarBibliotecario(const Bibliotecario bibliotecarios[], int longitud, const string& nombre, const string& apellido, int indice = 0) {
-	if (indice < longitud) {
-		if (bibliotecarios[indice].nombre == nombre && bibliotecarios[indice].apellido == apellido) {
-			cout << "Bibliotecario encontrado:" << endl;
-			imprimir(bibliotecarios[indice]);
-			return;
-		}
-		buscarBibliotecario(bibliotecarios, longitud, nombre, apellido, indice + 1);
-	} else {
-		cout << "Bibliotecario no encontrado." << endl;
-	}
-}
 // Función para mostrar el menú principal
 void mostrarMenu() {
 	cout << "----- Menú -----" << endl;
@@ -181,13 +161,13 @@ int main() {
 	srand(time(0));
 	
 	// Arrays fijos de referencia
-	string listaTitulos[] = {"Aprende C++", "Aprende Python", "Aprende Java"};
-	string listaAutores[] = {"Autor A", "Autor B", "Autor C"};
-	string listaISBN[] = {"1", "2", "3", "4", "5"};
-	string listaGeneros[] = {"Ficción", "No ficción", "Fantasía"};
-	string listaEditoriales[] = {"Editorial A", "Editorial B", "Editorial C"};
-	string listaNombres[] = {"Juan", "María", "Pedro"};
-	string listaApellidos[] = {"González", "Rodríguez", "López"};
+	string listaTitulos[] = {"Aprende C++", "Python", "Buleavard","Cien años de soledad"};
+	string listaAutores[] = {"Autor A", "Autor B", "Autor C","Autor D"};
+	string listaISBN[] = {"1", "2", "3", "4", "5","6"};
+	string listaGeneros[] = {"Ficción", "No ficción", "Fantasía","Romanticismo"};
+	string listaEditoriales[] = {"Editorial A", "Editorial B", "Editorial C","Editorial D"};
+	string listaNombres[] = {"Juan", "María", "Pedro","Marcos"};
+	string listaApellidos[] = {"González", "Rodríguez", "López","Antelos"};
 	
 	// Arrays para almacenar datos generados aleatoriamente
 	Libro libros[10];
@@ -205,9 +185,13 @@ int main() {
 		switch (opcion) {
 		case 1:
 			// Llenado de datos
-			llenarLibro(libros[0], listaTitulos, listaAutores, listaISBN, listaGeneros, listaEditoriales, 0);
-			llenarUsuario(usuarios[0], listaNombres, listaApellidos, 0);
-			llenarBibliotecario(bibliotecarios[0], listaNombres, listaApellidos, 0);
+			for (int i = 0; i < 10; ++i) {
+				llenarLibro(libros[i], listaTitulos, listaAutores, listaISBN, listaGeneros, listaEditoriales);
+			}
+			for (int i = 0; i < 5; ++i) {
+				llenarUsuario(usuarios[i], listaNombres, listaApellidos);
+				llenarBibliotecario(bibliotecarios[i], listaNombres, listaApellidos);
+			}
 			cout << "Datos llenados correctamente." << endl;
 			break;
 		case 2: {
@@ -221,17 +205,23 @@ int main() {
 				case 'A':
 					// Listado de libros
 					cout << "Listado de libros:" << endl;
-					imprimir(libros[0]);
+					for (int i = 0; i < 10; ++i) {
+						imprimir(libros[i]);
+					}
 					break;
 				case 'B':
 					// Listado de usuarios
 					cout << "Listado de usuarios:" << endl;
-					imprimir(usuarios[0]);
+					for (int i = 0; i < 5; ++i) {
+						imprimir(usuarios[i]);
+					}
 					break;
 				case 'C':
 					// Listado de bibliotecarios
 					cout << "Listado de bibliotecarios:" << endl;
-					imprimir(bibliotecarios[0]);
+					for (int i = 0; i < 5; ++i) {
+						imprimir(bibliotecarios[i]);
+					}
 					break;
 				case 'X':
 					cout << "Saliendo al menú principal." << endl;
@@ -256,21 +246,21 @@ int main() {
 					cout << "Ingrese el título del libro a buscar: ";
 					cin.ignore();
 					getline(cin, titulo);
-					buscarLibro(libros, 10, titulo);
+					buscarPorNombre(libros, 10, titulo);
 					break;
 				}
 				case 'B': {
 					string nombre, apellido;
 					cout << "Ingrese el nombre y apellido del usuario a buscar: ";
 					cin >> nombre >> apellido;
-					buscarUsuario(usuarios, 5, nombre, apellido);
+					buscarPorNombreApellido(usuarios, 5, nombre, apellido);
 					break;
 				}
 				case 'C': {
 					string nombre, apellido;
 					cout << "Ingrese el nombre y apellido del bibliotecario a buscar: ";
 					cin >> nombre >> apellido;
-					buscarBibliotecario(bibliotecarios, 5, nombre, apellido);
+					buscarPorNombreApellido(usuarios, 5, nombre, apellido);
 					break;
 				}
 				case 'X':
